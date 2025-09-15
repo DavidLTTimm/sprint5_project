@@ -1,53 +1,37 @@
-import pandas as pd
-import scipy.stats
 import streamlit as st
-import time
+import pandas as pd
+import plotly.express as px
 
-# estas são variáveis persistentes preservadas à medida que o Streamlin executa novamente esse script
-if 'experiment_no' not in st.session_state:
-    st.session_state['experiment_no'] = 0
+car_data = pd.read_csv('../vehicles.csv')  # lendo os dados
 
-if 'df_experiment_results' not in st.session_state:
-    st.session_state['df_experiment_results'] = pd.DataFrame(columns=['no', 'iterations', 'mean'])
+hist_button = st.button('Criar histograma.')  # cria um botão
 
-st.header('Jogando uma moeda')
+disp_button = st.button('Criar grafico de dispersão.')  # cria um botão
 
-chart = st.line_chart([0.5])
+fig = px.histogram(car_data, x="odometer")  # criar um histograma
+fig.show()  # exibindo
 
-def toss_coin(n):
+st.header('Sprint 5 - Projeto\n')  # cria um cabeçalho
 
-    trial_outcomes = scipy.stats.bernoulli.rvs(p=0.5, size=n)
+if hist_button:  # se o botão for clicado
+    # escreve uma mensagem
+    st.write(
+        'Criando um histograma para o conjunto de dados de anúncio de vendas de carros.')
 
-    mean = None
-    outcome_no = 0
-    outcome_1_count = 0
+    # cria um histograma
+    fig = px.histograma(car_data, x='odometer')
 
-    for r in trial_outcomes:
-        outcome_no +=1
-        if r == 1:
-            outcome_1_count += 1
-        mean = outcome_1_count / outcome_no
-        chart.add_rows([mean])
-        time.sleep(0.05)
+    # exibe um gráfico Plotly interativo
+    st.plotly_chart(fig, use_container_width=True)
 
-    return mean
+if disp_button:  # se o botão for clicado
+    # escreve uma mensagem
+    st.write(
+        'Criando um grafico de dispersão para o conjunto de dados de anúncio de vendas de carros.')
 
-number_of_trials = st.slider('Número de tentativas?', 1, 1000, 10)
-start_button = st.button('Executar')
+    # cria um histograma
+    # criar um gráfico de dispersão
+    fig = px.scatter(car_data, x="odometer", y="price")
 
-if start_button:
-    st.write(f'Executando o experimento de {number_of_trials} tentativas.')
-    st.session_state['experiment_no'] += 1
-    mean = toss_coin(number_of_trials)
-    st.session_state['df_experiment_results'] = pd.concat([
-        st.session_state['df_experiment_results'],
-        pd.DataFrame(data=[[st.session_state['experiment_no'],
-                            number_of_trials,
-                            mean]],
-                     columns=['no', 'iterations', 'mean'])
-        ],
-        axis=0)
-    st.session_state['df_experiment_results'] = \
-        st.session_state['df_experiment_results'].reset_index(drop=True)
-
-st.write(st.session_state['df_experiment_results'])
+    # exibe um gráfico Plotly interativo
+    st.plotly_chart(fig, use_container_width=True)

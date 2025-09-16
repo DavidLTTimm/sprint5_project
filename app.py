@@ -4,6 +4,8 @@ import plotly.express as px
 
 car_data = pd.read_csv('./vehicles.csv')  # lendo os dados
 
+st.header('Sprint 5 - Projeto\n')  # cria um cabeçalho
+
 hist_button = st.button('Criar histograma.')  # cria um botão
 
 disp_button = st.button('Criar grafico de dispersão.')  # cria um botão
@@ -11,7 +13,6 @@ disp_button = st.button('Criar grafico de dispersão.')  # cria um botão
 fig = px.histogram(car_data, x="odometer")  # criar um histograma
 fig.show()  # exibindo
 
-st.header('Sprint 5 - Projeto\n')  # cria um cabeçalho
 
 if hist_button:  # se o botão for clicado
     # escreve uma mensagem
